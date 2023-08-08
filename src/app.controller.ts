@@ -13,12 +13,14 @@ import { AppService } from './app.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import e, { Response, Request } from 'express';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Controller('api')
 export class AppController {
   constructor(
     private readonly appService: AppService,
     private jwtService: JwtService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   @Post('register')
@@ -36,6 +38,8 @@ export class AppController {
     });
 
     delete user.password;
+
+    this.eventEmitter.emit('user.registered', { username: user.name });
 
     return user;
   }

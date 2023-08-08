@@ -6,6 +6,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import app_config from './config/app.config';
 import database_config from './config/database.config';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -19,6 +20,11 @@ import database_config from './config/database.config';
       useFactory: (config: ConfigService) => config.get('database'),
       inject: [ConfigService],
     }),
+    JwtModule.register({
+      secret: 'secret',
+      signOptions: { expiresIn: '1d' },
+    }),
+    EventEmitterModule.forRoot(),
     JwtModule.register({
       secret: 'secret',
       signOptions: { expiresIn: '1d' },
